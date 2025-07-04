@@ -1,0 +1,5 @@
+{
+  "name": "Evaluador de Méritos PAD UPO",
+  "description": "Una aplicación web interactiva que ayuda a los usuarios a evaluar sus méritos para una plaza de Profesorado Ayudante Doctor en la Universidad Pablo de Olavide, Sevilla, según la guía oficial.",
+  "requestFramePermissions": []
+}
