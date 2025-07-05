@@ -2,7 +2,7 @@ import React from "react";
 
 export const Disclaimer: React.FC = () => {
   return (
-    <div className="p-6 bg-yellow-50 border-l-4 border-yellow-400 rounded-r-lg text-yellow-800">
+    <div className="p-6 bg-[var(--secondary-color)] bg-opacity-20 border-l-4 border-[var(--secondary-color)] rounded-r-lg text-[var(--text-color)]">
       <h3 className="font-bold text-lg mb-2">Aviso Importante</h3>
       <p className="text-sm">
         Esta aplicación es una <strong>herramienta de ayuda</strong> y sus

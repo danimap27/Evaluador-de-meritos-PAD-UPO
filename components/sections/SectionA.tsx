@@ -154,7 +154,7 @@ export const SectionA: React.FC<Props> = ({
         data.A2_3_ActividadProfesional.length
       }
     >
-      <h4 className="font-semibold text-gray-700">
+      <h4 className="font-semibold text-[var(--text-color)]">
         A.2.1 Otras Titulaciones Complementarias
       </h4>
       {data.A2_1_OtrasTitulaciones.map((entry) => (
@@ -179,12 +179,12 @@ export const SectionA: React.FC<Props> = ({
       ))}
       <button
         onClick={() => addEntry("A", "A2_1_OtrasTitulaciones")}
-        className="text-sm text-blue-600 hover:underline mt-2"
+        className="text-sm text-[var(--primary-color)] hover:underline mt-2"
       >
         Añadir titulación
       </button>
 
-      <h4 className="font-semibold mt-4 text-gray-700">
+      <h4 className="font-semibold mt-4 text-[var(--text-color)]">
         A.2.2 Cursos y Formación Recibida
       </h4>
       {data.A2_2_CursosFormacion.map((entry) => (
@@ -209,12 +209,12 @@ export const SectionA: React.FC<Props> = ({
       ))}
       <button
         onClick={() => addEntry("A", "A2_2_CursosFormacion")}
-        className="text-sm text-blue-600 hover:underline mt-2"
+        className="text-sm text-[var(--primary-color)] hover:underline mt-2"
       >
         Añadir curso
       </button>
 
-      <h4 className="font-semibold mt-4 text-gray-700">
+      <h4 className="font-semibold mt-4 text-[var(--text-color)]">
         A.2.3 Actividad Profesional
       </h4>
       {data.A2_3_ActividadProfesional.map((entry) => (
@@ -241,7 +241,7 @@ export const SectionA: React.FC<Props> = ({
       ))}
       <button
         onClick={() => addEntry("A", "A2_3_ActividadProfesional")}
-        className="text-sm text-blue-600 hover:underline mt-2"
+        className="text-sm text-[var(--primary-color)] hover:underline mt-2"
       >
         Añadir actividad
       </button>

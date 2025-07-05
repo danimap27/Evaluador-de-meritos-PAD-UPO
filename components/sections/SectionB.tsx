@@ -43,7 +43,7 @@ export const SectionB: React.FC<Props> = ({
             max={240}
           />
           <div
-            className={`mt-6 p-2 text-sm rounded-full ${isSaturatedUni ? "bg-green-100 text-green-800" : "bg-gray-200 text-gray-700"}`}
+            className={`mt-6 p-2 text-sm rounded-full hours-counter ${isSaturatedUni ? "bg-[color-mix(in srgb, var(--secondary-color) 20%, transparent)] text-[var(--text-color)]" : "bg-[color-mix(in srgb, var(--text-color) 10%, transparent)] text-[var(--text-color)]"}`}
           >
             {data.B1_1_ActividadDocenteUni.horas} / 240h{" "}
             {isSaturatedUni ? "(Máx)" : ""}
@@ -67,7 +67,7 @@ export const SectionB: React.FC<Props> = ({
             max={240}
           />
           <div
-            className={`mt-6 p-2 text-sm rounded-full ${isSaturatedNoUni ? "bg-green-100 text-green-800" : "bg-gray-200 text-gray-700"}`}
+            className={`mt-6 p-2 text-sm rounded-full hours-counter ${isSaturatedNoUni ? "bg-[color-mix(in srgb, var(--secondary-color) 20%, transparent)] text-[var(--text-color)]" : "bg-[color-mix(in srgb, var(--text-color) 10%, transparent)] text-[var(--text-color)]"}`}
           >
             {data.B1_2_ActividadDocenteNoUni.horas} / 240h{" "}
             {isSaturatedNoUni ? "(Máx)" : ""}

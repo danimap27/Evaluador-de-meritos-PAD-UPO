@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-upo-blue: #003772;
+  --color-upo-gold: #FCC100;
+
+  /* Light Mode */
+  --background-color: #ffffff;
+  --text-color: #333333;
+  --primary-color: var(--color-upo-blue);
+  --secondary-color: var(--color-upo-gold);
+}
+
+body.dark-mode {
+  --background-color: #333333;
+  --text-color: #ffffff;
+  --primary-color: var(--color-upo-gold);
+  --secondary-color: var(--color-upo-blue);
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Ejemplo de uso en componentes */
+.header {
+  background-color: var(--primary-color);
+  color: var(--text-color);
+}
+
+.button {
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+}
+
+.phase2-checkbox-container {
+  background-color: var(--background-color);
+}
+
+.dark-mode .phase2-checkbox-container {
+  background-color: var(--background-color);
+}
+
+.phase2-checkbox-label {
+  color: var(--text-color);
+}
+
+.dark-mode .phase2-checkbox-label {
+  color: var(--text-color);
+}
+
+.hours-counter {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.dark-mode .hours-counter {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}

@@ -27,28 +27,28 @@ export const SectionPhase2: React.FC<Props> = ({
         infoText="Marque las casillas si cumple con estos méritos. Estos otorgan una bonificación del +12.5% cada uno sobre la puntuación de la Fase 1. La acreditación es un mérito general, mientras que la experiencia de 5 años solo aplica al Concurso de Adaptación."
       >
         <div className="space-y-3">
-          <label className="flex items-center gap-3 p-3 bg-white rounded-md border border-gray-200 cursor-pointer hover:border-blue-500 transition">
+          <label className="flex items-center gap-3 p-3 rounded-md border border-[var(--text-color)] border-opacity-20 cursor-pointer hover:border-[var(--primary-color)] transition phase2-checkbox-container">
             <input
               type="checkbox"
-              className="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+              className="h-5 w-5 rounded border-[var(--text-color)] border-opacity-30 text-[var(--primary-color)] focus:ring-[var(--primary-color)]"
               checked={preferredMerits?.acreditacion ?? false}
               onChange={(e) =>
                 updateField("preferredMerits", "acreditacion", e.target.checked)
               }
             />
-            <span>Acreditación vigente de Profesor/a Ayudante Doctor/a.</span>
+            <span className="phase2-checkbox-label">Acreditación vigente de Profesor/a Ayudante Doctor/a.</span>
           </label>
           {contestType === "adaptacion" && (
-            <label className="flex items-center gap-3 p-3 bg-white rounded-md border border-gray-200 cursor-pointer hover:border-blue-500 transition">
+            <label className="flex items-center gap-3 p-3 rounded-md border border-[var(--text-color)] border-opacity-20 cursor-pointer hover:border-[var(--primary-color)] transition phase2-checkbox-container">
               <input
                 type="checkbox"
-                className="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                className="h-5 w-5 rounded border-[var(--text-color)] border-opacity-30 text-[var(--primary-color)] focus:ring-[var(--primary-color)]"
                 checked={preferredMerits?.cincoAnios ?? false}
                 onChange={(e) =>
                   updateField("preferredMerits", "cincoAnios", e.target.checked)
                 }
               />
-              <span>
+              <span className="phase2-checkbox-label">
                 Para Concurso de Adaptación: haber realizado docencia en
                 universidades públicas españolas durante al menos cinco cursos
                 académicos de los últimos siete.
@@ -62,7 +62,7 @@ export const SectionPhase2: React.FC<Props> = ({
         title="Autoevaluación de la Fase 2 (Exposición y Debate)"
         infoText="Esta fase es cualitativa y la decide la comisión. Realice una autoevaluación honesta (0-10) de sus habilidades de exposición oral y debate para obtener una puntuación meramente orientativa."
       >
-        <p className="text-sm text-yellow-800 bg-yellow-100 p-3 rounded-md">
+        <p className="text-sm text-[var(--secondary-color)] bg-[color-mix(in srgb, var(--secondary-color) 10%, transparent)] p-3 rounded-md">
           <strong>Atención:</strong> Esta fase es evaluada cualitativamente por
           la comisión. La puntuación aquí es solo una{" "}
           <strong>autoevaluación indicativa</strong>.
@@ -71,11 +71,11 @@ export const SectionPhase2: React.FC<Props> = ({
           <div>
             <label
               htmlFor="exposicion"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-[var(--text-color)]"
             >
               Valoración de la Exposición (0-10)
             </label>
-            <p className="text-xs text-gray-500 mb-2">
+            <p className="text-xs text-[var(--text-color)] text-opacity-70 mb-2">
               Claridad, estructura, dominio, perspectivas novedosas.
             </p>
             <input
@@ -87,9 +87,9 @@ export const SectionPhase2: React.FC<Props> = ({
               onChange={(e) =>
                 updateField("Phase2", "exposicion", e.target.valueAsNumber)
               }
-              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+              className="w-full h-2 bg-[color-mix(in srgb, var(--text-color) 10%, transparent)] rounded-lg appearance-none cursor-pointer"
             />
-            <div className="text-center font-bold text-blue-600 mt-1">
+            <div className="text-center font-bold text-[var(--primary-color)] mt-1">
               {data.exposicion}
             </div>
           </div>
@@ -97,11 +97,11 @@ export const SectionPhase2: React.FC<Props> = ({
           <div>
             <label
               htmlFor="debate"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-[var(--text-color)]"
             >
               Valoración del Debate (0-10)
             </label>
-            <p className="text-xs text-gray-500 mb-2">
+            <p className="text-xs text-[var(--text-color)] text-opacity-70 mb-2">
               Respuestas, defensa crítica, apertura al diálogo, agilidad.
             </p>
             <input
@@ -113,9 +113,9 @@ export const SectionPhase2: React.FC<Props> = ({
               onChange={(e) =>
                 updateField("Phase2", "debate", e.target.valueAsNumber)
               }
-              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+              className="w-full h-2 bg-[color-mix(in srgb, var(--text-color) 10%, transparent)] rounded-lg appearance-none cursor-pointer"
             />
-            <div className="text-center font-bold text-blue-600 mt-1">
+            <div className="text-center font-bold text-[var(--primary-color)] mt-1">
               {data.debate}
             </div>
           </div>

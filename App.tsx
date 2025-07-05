@@ -14,10 +14,30 @@ import {
   DownloadIcon,
 } from "./components/Icons";
 import { AppState } from "./types";
+import { useTheme } from "./ThemeContext";
+import Footer from "./components/shared/Footer";
+import { useSound } from "./hooks/useSound";
+import CongratulationsPopup from "./components/CongratulationsPopup";
 
 export type ContestType = "adaptacion" | "acceso";
 
 const SECTIONS = ["A", "B", "C", "D", "Fase 2"];
+
+const MAX_SCORES = {
+  A: 100,
+  B: 100,
+  C: 100,
+  D: 100,
+  Phase2: 100,
+};
+
+const CONGRATULATIONS_MESSAGES = {
+  A: "¡Has alcanzado la máxima puntuación en Historial Académico! Tu trayectoria es impecable.",
+  B: "¡Felicidades! Has saturado la sección de Experiencia Docente. Tu dedicación a la enseñanza es excepcional.",
+  C: "¡Increíble! Máxima puntuación en Investigación, Transferencia e Intercambio del Conocimiento. Tu impacto científico es sobresaliente.",
+  D: "¡Enhorabuena! Has completado la sección de Gestión. Tu capacidad organizativa es admirable.",
+  Phase2: "¡Excelente! Has alcanzado la máxima puntuación en la Fase 2. ¡Estás listo para el siguiente nivel!",
+};
 
 const generateTxtContent = (state: AppState): string => {
   let content = `**********************************************\n`;
@@ -130,6 +150,12 @@ const generateTxtContent = (state: AppState): string => {
 const App: React.FC = () => {
   const [contestType, setContestType] = useState<ContestType | null>(null);
   const [currentSection, setCurrentSection] = useState(0);
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("");
+
+  const { theme, toggleTheme } = useTheme();
+  const playClickSound = useSound("/click.mp3");
+  const playSuccessSound = useSound("/success.mp3"); // Assuming a success sound
 
   const { state, updateField, addEntry, removeEntry, scores } =
     useMeritStore(contestType);
@@ -141,18 +167,40 @@ const App: React.FC = () => {
     }
   }, []);
 
+  useEffect(() => {
+    // Check for saturated sections
+    if (scores.sections) {
+      scores.sections.forEach((section) => {
+        const sectionKey = section.name.replace(/ /g, '') as keyof typeof MAX_SCORES;
+        if (MAX_SCORES[sectionKey] && section.score >= MAX_SCORES[sectionKey]) {
+          setPopupMessage(CONGRATULATIONS_MESSAGES[sectionKey]);
+          setShowPopup(true);
+          playSuccessSound();
+        }
+      });
+    }
+  }, [scores, playSuccessSound]);
+
+  const handleClosePopup = () => {
+    setShowPopup(false);
+    setPopupMessage("");
+  };
+
   const handleContestTypeSelect = (type: ContestType) => {
+    playClickSound();
     setContestType(type);
     localStorage.setItem("contestType", type);
   };
 
   const resetApp = () => {
+    playClickSound();
     localStorage.clear();
     setContestType(null);
     window.location.reload();
   };
 
   const handleExport = () => {
+    playClickSound();
     const content = generateTxtContent(state);
     const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
@@ -217,33 +265,38 @@ const App: React.FC = () => {
     }
   };
 
-  const nextSection = () =>
+  const nextSection = () => {
+    playClickSound();
     setCurrentSection((s) => Math.min(s + 1, SECTIONS.length - 1));
-  const prevSection = () => setCurrentSection((s) => Math.max(s - 1, 0));
+  };
+  const prevSection = () => {
+    playClickSound();
+    setCurrentSection((s) => Math.max(s - 1, 0));
+  };
 
   if (!contestType) {
     return (
-      <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
-        <div className="max-w-4xl w-full text-center bg-white p-8 rounded-xl shadow-lg border border-gray-200">
-          <BookOpenIcon className="mx-auto h-16 w-16 text-blue-600 mb-4" />
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">
+      <div className="min-h-screen bg-[var(--background-color)] flex flex-col items-center justify-center p-4">
+        <div className="max-w-4xl w-full text-center bg-[var(--background-color)] p-8 rounded-xl shadow-lg border border-[var(--text-color)] border-opacity-20">
+          <BookOpenIcon className="mx-auto h-16 w-16 text-[var(--primary-color)] mb-4" />
+          <h1 className="text-3xl font-bold text-[var(--text-color)] mb-2">
             Evaluador de Méritos para Profesorado Ayudante Doctor
           </h1>
-          <p className="text-gray-600 mb-8">
+          <p className="text-[var(--text-color)] mb-8">
             Universidad Pablo de Olavide, Sevilla
           </p>
-          <h2 className="text-xl font-semibold text-gray-700 mb-6">
+          <h2 className="text-xl font-semibold text-[var(--text-color)] mb-6">
             Seleccione el tipo de concurso:
           </h2>
           <div className="flex flex-col sm:flex-row gap-8 justify-center">
             <div className="flex-1 text-center">
               <button
                 onClick={() => handleContestTypeSelect("adaptacion")}
-                className="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 shadow-md"
+                className="w-full bg-[var(--primary-color)] text-white font-bold py-3 px-6 rounded-lg hover:brightness-90 transition-all duration-300 transform hover:scale-105 shadow-md"
               >
                 Concurso de Adaptación
               </button>
-              <p className="text-sm text-gray-600 mt-3 px-2">
+              <p className="text-sm text-[var(--text-color)] mt-3 px-2">
                 Generalmente para personal que ya tiene una vinculación con la
                 universidad y busca adaptarse a la nueva ley (LOSU). Puede
                 incluir méritos preferentes específicos.
@@ -252,11 +305,11 @@ const App: React.FC = () => {
             <div className="flex-1 text-center">
               <button
                 onClick={() => handleContestTypeSelect("acceso")}
-                className="w-full bg-green-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-700 transition-all duration-300 transform hover:scale-105 shadow-md"
+                className="w-full bg-[var(--secondary-color)] text-white font-bold py-3 px-6 rounded-lg hover:brightness-90 transition-all duration-300 transform hover:scale-105 shadow-md"
               >
                 Concurso de Acceso
               </button>
-              <p className="text-sm text-gray-600 mt-3 px-2">
+              <p className="text-sm text-[var(--text-color)] mt-3 px-2">
                 Concurso de acceso general abierto a cualquier candidato/a que
                 cumpla los requisitos, sin necesidad de vinculación previa con
                 la universidad.
@@ -269,22 +322,22 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-800">
-      <header className="bg-white shadow-md sticky top-0 z-20">
+    <div className="min-h-screen bg-[var(--background-color)] text-[var(--text-color)]">
+      <header className="bg-[var(--background-color)] shadow-md sticky top-0 z-20">
         <div className="container mx-auto px-4 py-3 flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <BookOpenIcon className="h-8 w-8 text-blue-600" />
-            <h1 className="text-xl md:text-2xl font-bold text-gray-800">
+            <BookOpenIcon className="h-8 w-8 text-[var(--primary-color)]" />
+            <h1 className="text-xl md:text-2xl font-bold text-[var(--text-color)]">
               Evaluador de Méritos PAD
             </h1>
           </div>
           <div className="flex items-center gap-4">
-            <span className="hidden sm:inline bg-blue-100 text-blue-800 text-sm font-semibold px-3 py-1 rounded-full">
+            <span className="hidden sm:inline bg-[color-mix(in srgb, var(--primary-color) 20%, transparent)] text-[var(--primary-color)] text-sm font-semibold px-3 py-1 rounded-full">
               {contestType === "adaptacion" ? "Adaptación" : "Acceso"}
             </span>
             <button
               onClick={handleExport}
-              className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-blue-600 hover:underline"
+              className="flex items-center gap-1.5 text-sm text-[var(--text-color)] hover:text-[var(--primary-color)] hover:underline"
               title="Exportar a TXT"
             >
               <DownloadIcon className="h-4 w-4" />
@@ -292,9 +345,17 @@ const App: React.FC = () => {
             </button>
             <button
               onClick={resetApp}
-              className="text-sm text-gray-500 hover:text-red-600 hover:underline"
+              className="text-sm text-[var(--text-color)] hover:text-red-600 hover:underline"
             >
               Reiniciar
+            </button>
+            {/* Theme Toggle Button */}
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-full bg-[var(--secondary-color)] text-[var(--text-color)] hover:brightness-90 transition"
+              title={theme === 'light' ? 'Cambiar a modo oscuro' : 'Cambiar a modo claro'}
+            >
+              {theme === 'light' ? '🌙' : '☀️'}
             </button>
           </div>
         </div>
@@ -302,9 +363,9 @@ const App: React.FC = () => {
 
       <main className="container mx-auto p-4 grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
-          <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+          <div className="bg-[var(--background-color)] p-6 rounded-xl shadow-lg border border-[var(--text-color)] border-opacity-20">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-gray-800">
+              <h2 className="text-2xl font-bold text-[var(--text-color)]">
                 Sección {SECTIONS[currentSection]}:{" "}
                 {scores.sections[currentSection].name}
               </h2>
@@ -312,17 +373,17 @@ const App: React.FC = () => {
                 <button
                   onClick={prevSection}
                   disabled={currentSection === 0}
-                  className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                  className="p-2 rounded-full bg-[color-mix(in srgb, var(--text-color) 10%, transparent)] hover:bg-[color-mix(in srgb, var(--text-color) 20%, transparent)] disabled:opacity-50 disabled:cursor-not-allowed transition"
                 >
                   <ArrowLeftIcon className="h-5 w-5" />
                 </button>
-                <span className="text-sm font-medium text-gray-600">
+                <span className="text-sm font-medium text-[var(--text-color)]">
                   {currentSection + 1} / {SECTIONS.length}
                 </span>
                 <button
                   onClick={nextSection}
                   disabled={currentSection === SECTIONS.length - 1}
-                  className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                  className="p-2 rounded-full bg-[color-mix(in srgb, var(--text-color) 10%, transparent)] hover:bg-[color-mix(in srgb, var(--text-color) 20%, transparent)] disabled:opacity-50 disabled:cursor-not-allowed transition"
                 >
                   <ArrowRightIcon className="h-5 w-5" />
                 </button>
@@ -334,12 +395,17 @@ const App: React.FC = () => {
 
         <div className="lg:col-span-1 lg:sticky lg:top-24 self-start">
           <ScoreVisualization scores={scores} />
+          <div className="mt-8">
+            <Disclaimer />
+          </div>
         </div>
       </main>
 
-      <footer className="container mx-auto px-4 py-8">
-        <Disclaimer />
-      </footer>
+      <Footer />
+
+      {showPopup && (
+        <CongratulationsPopup message={popupMessage} onClose={handleClosePopup} />
+      )}
     </div>
   );
 };

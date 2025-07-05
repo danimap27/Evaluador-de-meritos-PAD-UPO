@@ -12,13 +12,13 @@ interface BaseInputProps {
 
 export const TextInput: React.FC<BaseInputProps> = ({ label, ...props }) => (
   <div className="w-full">
-    <label className="block text-sm font-medium text-gray-600 mb-1">
+    <label className="block text-sm font-medium text-[var(--text-color)] mb-1">
       {label}
     </label>
     <input
       type="text"
       {...props}
-      className={`w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm ${props.className}`}
+      className={`w-full px-3 py-2 bg-[var(--background-color)] border border-[var(--text-color)] border-opacity-30 rounded-md shadow-sm focus:outline-none focus:ring-[var(--primary-color)] focus:border-[var(--primary-color)] sm:text-sm ${props.className}`}
     />
   </div>
 );
@@ -27,13 +27,13 @@ export const NumberInput: React.FC<
   BaseInputProps & { min?: number; max?: number }
 > = ({ label, ...props }) => (
   <div className="w-full">
-    <label className="block text-sm font-medium text-gray-600 mb-1">
+    <label className="block text-sm font-medium text-[var(--text-color)] mb-1">
       {label}
     </label>
     <input
       type="number"
       {...props}
-      className={`w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm ${props.className}`}
+      className={`w-full px-3 py-2 bg-[var(--background-color)] border border-[var(--text-color)] border-opacity-30 rounded-md shadow-sm focus:outline-none focus:ring-[var(--primary-color)] focus:border-[var(--primary-color)] sm:text-sm ${props.className}`}
     />
   </div>
 );
@@ -42,16 +42,16 @@ export const TextareaInput: React.FC<
   BaseInputProps & { maxLength?: number; rows?: number }
 > = ({ label, maxLength, ...props }) => (
   <div className="w-full">
-    <label className="block text-sm font-medium text-gray-600 mb-1">
+    <label className="block text-sm font-medium text-[var(--text-color)] mb-1">
       {label}
     </label>
     <textarea
       {...props}
       maxLength={maxLength}
-      className={`w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm ${props.className}`}
+      className={`w-full px-3 py-2 bg-[var(--background-color)] border border-[var(--text-color)] border-opacity-30 rounded-md shadow-sm focus:outline-none focus:ring-[var(--primary-color)] focus:border-[var(--primary-color)] sm:text-sm ${props.className}`}
     />
     {maxLength && (
-      <p className="text-xs text-right text-gray-500 mt-1">{`${(props.value as string)?.length || 0} / ${maxLength}`}</p>
+      <p className="text-xs text-right text-[var(--text-color)] text-opacity-70 mt-1">{`${(props.value as string)?.length || 0} / ${maxLength}`}</p>
     )}
   </div>
 );
@@ -75,16 +75,16 @@ export const FileUpload: React.FC<FileInputProps> = ({
 
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-600 mb-1">
+      <label className="block text-sm font-medium text-[var(--text-color)] mb-1">
         {label}
       </label>
-      <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+      <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-[var(--text-color)] border-opacity-30 border-dashed rounded-md">
         <div className="space-y-1 text-center">
-          <UploadIcon className="mx-auto h-10 w-10 text-gray-400" />
-          <div className="flex text-sm text-gray-600">
+          <UploadIcon className="mx-auto h-10 w-10 text-[var(--text-color)] text-opacity-60" />
+          <div className="flex text-sm text-[var(--text-color)]">
             <label
               htmlFor={`file-upload-${label}`}
-              className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500"
+              className="relative cursor-pointer bg-[var(--background-color)] rounded-md font-medium text-[var(--primary-color)] hover:brightness-90 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-[var(--primary-color)]"
             >
               <span>Subir un archivo</span>
               <input
@@ -97,15 +97,15 @@ export const FileUpload: React.FC<FileInputProps> = ({
             </label>
             <p className="pl-1">o arrastrar y soltar</p>
           </div>
-          <p className="text-xs text-gray-500">PDF, DOCX, JPG, PNG</p>
+          <p className="text-xs text-[var(--text-color)] text-opacity-70">PDF, DOCX, JPG, PNG</p>
         </div>
       </div>
       {fileName && (
-        <p className="text-sm text-green-700 mt-2">
+        <p className="text-sm text-[var(--primary-color)] mt-2">
           Archivo seleccionado: {fileName}
         </p>
       )}
-      <p className="text-xs text-gray-500 mt-2">
+      <p className="text-xs text-[var(--text-color)] text-opacity-70 mt-2">
         <strong>Nota:</strong> Esta función es solo para tu control. Los
         archivos no se guardan en el servidor; solo se registra el nombre.
       </p>

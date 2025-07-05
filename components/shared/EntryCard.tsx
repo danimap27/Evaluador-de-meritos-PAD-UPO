@@ -13,11 +13,11 @@ export const EntryCard: React.FC<EntryCardProps> = ({
   children,
 }) => {
   return (
-    <div className="p-4 border border-gray-200 rounded-lg bg-gray-50/50 relative">
+    <div className="p-4 border border-[var(--text-color)] border-opacity-20 rounded-lg bg-[color-mix(in srgb, var(--background-color) 50%, transparent)] relative">
       <div className="absolute top-2 right-2">
         <button
           onClick={onRemove}
-          className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-100 rounded-full transition-colors"
+          className="p-1.5 text-[var(--text-color)] text-opacity-60 hover:text-red-600 hover:bg-[color-mix(in srgb, red 10%, transparent)] rounded-full transition-colors"
           aria-label="Eliminar entrada"
         >
           <TrashIcon className="h-5 w-5" />
