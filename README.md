@@ -1,6 +1,95 @@
 # Evaluador de Méritos PAD UPO
 
-Este proyecto es una aplicación web desarrollada con React y Vite, diseñada para la evaluación de méritos, probablemente en el contexto de la Universidad Pablo de Olavide (UPO). Permite a los usuarios introducir información en diferentes secciones (A, B, C, D y Fase 2) y visualizar una puntuación o evaluación basada en los datos introducidos.
+Esta es una herramienta para calcular la puntuación de los méritos del Personal de Administración y Dirección (PAD) de la Universidad Pablo de Olavide (UPO).
+
+## Ejecución en Local
+
+Para ejecutar la aplicación en tu máquina local, sigue estos pasos:
+
+1.  **Clona el repositorio:**
+    ```bash
+    git clone <URL-del-repositorio>
+    cd evaluador-de-meritos-pad-upo
+    ```
+
+2.  **Ejecuta el script de inicio:**
+    *   En **Windows**, haz doble clic en el fichero `run.bat`.
+    *   En **macOS o Linux**, ejecuta el siguiente comando en la terminal:
+        ```bash
+        sh run.sh
+        ```
+
+    El script se encargará de instalar las dependencias necesarias (`npm install`) y de iniciar el servidor de desarrollo (`npm run dev`).
+
+3.  **Abre la aplicación en tu navegador:**
+    Una vez que el servidor esté en marcha, la terminal te mostrará una URL local (normalmente `http://localhost:5173`). Abre esa dirección en tu navegador para usar la aplicación.
+
+## Estructura de Carpetas para Documentos (Local)
+
+Al ejecutar la aplicación por primera vez con el script `run.bat` o `run.sh`, se creará una carpeta `local_data` en la raíz del proyecto. Esta carpeta está diseñada para que puedas organizar y guardar los documentos que acreditan tus méritos *antes* de subirlos a la aplicación.
+
+La estructura creada es la siguiente:
+
+```
+/evaluador-de-meritos-pad-upo
+|-- local_data/
+|   |-- historial_academico/
+|   |   |-- titulaciones/       # PDFs de títulos universitarios, etc.
+|   |   |-- certificaciones/    # Certificados de idiomas, etc.
+|   |   |-- cursos/             # Diplomas de cursos de formación.
+|   |
+|   |-- experiencia_profesional/
+|   |   |-- contratos/          # Contratos de trabajo.
+|   |   |-- vida_laboral/       # Informe de vida laboral.
+|   |
+|   |-- investigacion/
+|   |   |-- publicaciones/      # Artículos, capítulos de libros.
+|   |   |-- proyectos/          # Certificados de participación en proyectos.
+|   |
+|   |-- otros_meritos/          # Cualquier otro documento relevante.
+|
+|-- ... (resto de ficheros del proyecto)
+```
+
+**Importante:** La carpeta `local_data` y todo su contenido están excluidos del control de versiones de Git (a través del fichero `.gitignore`), por lo que tus documentos personales nunca se subirán al repositorio de Git.
+
+## Funcionalidad de Subida y Exportación de Justificantes
+
+La aplicación permite adjuntar ficheros justificantes a cada mérito individualmente. Estos ficheros se almacenan temporalmente en la memoria del navegador mientras usas la aplicación.
+
+### Exportar a ZIP
+
+Al hacer clic en el botón "Exportar a ZIP", la aplicación generará un fichero `.zip` que contendrá:
+
+1.  **`resumen_meritos.txt`:** Un fichero de texto con un informe detallado de todos los méritos introducidos. Este informe incluye:
+    *   La puntuación total estimada.
+    *   La puntuación estimada por cada sección.
+    *   Un desglose completo de todos los datos que has introducido en cada campo de cada mérito.
+    *   La ruta relativa dentro del ZIP de cada fichero justificante que hayas adjuntado.
+
+2.  **Carpeta `justificantes/`:** Una carpeta que contendrá todos los ficheros justificantes que hayas subido, organizados en una estructura de subcarpetas que replica la clasificación de los méritos. Por ejemplo:
+
+    ```
+    /evaluacion_meritos_upo.zip
+    |-- resumen_meritos.txt
+    |-- justificantes/
+    |   |-- historial_academico/
+    |   |   |-- titulaciones/       # Tus PDFs de títulos
+    |   |   |-- certificaciones/    # Tus PDFs de certificados
+    |   |   |-- cursos/             # Tus PDFs de diplomas de cursos
+    |   |
+    |   |-- experiencia_profesional/
+    |   |   |-- contratos/          # Tus PDFs de contratos
+    |   |   |-- vida_laboral/       # Tu PDF de vida laboral
+    |   |
+    |   |-- investigacion/
+    |   |   |-- publicaciones/      # Tus PDFs de publicaciones
+    |   |   |-- proyectos/          # Tus PDFs de proyectos
+    |   |
+    |   |-- otros_meritos/          # Tus PDFs de otros justificantes
+    ```
+
+Esta funcionalidad te permite tener un respaldo organizado de toda la información y los documentos asociados a tu evaluación de méritos.
 
 ## Cómo Funciona
 
@@ -22,6 +111,8 @@ El proyecto utiliza las siguientes tecnologías y librerías principales:
 - **uuid**: Para la generación de identificadores únicos universales.
 - **recharts**: Una librería de gráficos componible construida con React.
 - **Zustand**: Una solución de gestión de estado pequeña, rápida y escalable para React.
+- **JSZip**: Para la creación de ficheros ZIP en el navegador.
+- **File-Saver**: Para la descarga de ficheros generados en el navegador.
 
 Las dependencias exactas se pueden encontrar en el archivo `package.json`.
 

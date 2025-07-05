@@ -13,11 +13,11 @@ import {
   BookOpenIcon,
   DownloadIcon,
 } from "./components/Icons";
-import { AppState } from "./types";
 import { useTheme } from "./ThemeContext";
 import Footer from "./components/shared/Footer";
 import { useSound } from "./hooks/useSound";
 import CongratulationsPopup from "./components/CongratulationsPopup";
+import { exportToZip } from "./utils/export"; // Import the new export function
 
 export type ContestType = "adaptacion" | "acceso";
 
@@ -39,114 +39,6 @@ const CONGRATULATIONS_MESSAGES = {
   Phase2: "¡Excelente! Has alcanzado la máxima puntuación en la Fase 2. ¡Estás listo para el siguiente nivel!",
 };
 
-const generateTxtContent = (state: AppState): string => {
-  let content = `**********************************************\n`;
-  content += `EVALUACIÓN DE MÉRITOS - PROFESORADO AYUDANTE DOCTOR\n`;
-  content += `**********************************************\n\n`;
-  content += `Tipo de Concurso: ${state.contestType === "adaptacion" ? "Adaptación" : "Acceso"}\n\n`;
-
-  const sectionTitles = {
-    A: "Historial Académico",
-    B: "Experiencia Docente",
-    C: "Experiencia Investigadora, Transferencia e Intercambio del Conocimiento",
-    D: "Gestión",
-  };
-
-  // Section A
-  content += `--- SECCIÓN A: ${sectionTitles.A} ---\n\n`;
-  content += `A.1.1 Titulaciones Universitarias:\n`;
-  state.A.A1_1_Titulaciones.forEach(
-    (e) =>
-      (content += `- Tipo: ${e.tipo || "N/A"}. (Justificante: ${e.archivo || "N/A"})\n`),
-  );
-  content += `\nA.1.2 Calificación Media del Expediente Académico:\n- Nota: ${state.A.A1_2_CalificacionMedia.value}\n`;
-  content += `\nA.1.3 Becas/Contratos Predoctorales:\n`;
-  state.A.A1_3_BecasContratos.forEach(
-    (e) => (content += `- Beca/Contrato: ${e.tipo || "N/A"}\n`),
-  );
-  content += `\nA.1.4 Premios Relevantes:\n`;
-  state.A.A1_4_PremiosRelevantes.forEach(
-    (e) => (content += `- Premio: ${e.desc || "N/A"}\n`),
-  );
-  content += `\nA.2 Otros Méritos:\n`;
-  content += `  A.2.1 Otras Titulaciones Complementarias:\n`;
-  state.A.A2_1_OtrasTitulaciones.forEach(
-    (e) => (content += `  - Título: ${e.tipo || "N/A"}\n`),
-  );
-  content += `  A.2.2 Cursos y Formación Recibida:\n`;
-  state.A.A2_2_CursosFormacion.forEach(
-    (e) => (content += `  - Curso: ${e.nombre || "N/A"}\n`),
-  );
-  content += `  A.2.3 Actividad Profesional:\n`;
-  state.A.A2_3_ActividadProfesional.forEach(
-    (e) => (content += `  - Actividad: ${e.puesto || "N/A"}\n`),
-  );
-
-  // Section B
-  content += `\n--- SECCIÓN B: ${sectionTitles.B} ---\n\n`;
-  content += `B.1.1 Actividad Docente Universitaria:\n- Horas: ${state.B.B1_1_ActividadDocenteUni.horas}\n`;
-  content += `B.1.2 Actividad Docente no Universitaria:\n- Horas: ${state.B.B1_2_ActividadDocenteNoUni.horas}\n`;
-  content += `B.2 Calidad de la Actividad Docente Universitaria:\n- Informe: ${state.B.B2_CalidadDocente.informe || "N/A"}\n`;
-  content += `B.3 Tutela de Alumnado (TFG, TFM, Tesis):\n`;
-  state.B.B3_TutelaAlumnado.forEach(
-    (e) => (content += `- Tutela: ${e.desc || "N/A"}\n`),
-  );
-  content += `B.4 Innovación en Metodología Docente Universitaria:\n`;
-  state.B.B4_InnovacionDocente.forEach(
-    (e) => (content += `- Innovación: ${e.desc || "N/A"}\n`),
-  );
-  content += `B.5 Cursos de Formación Docente Universitaria:\n`;
-  state.B.B5_CursosFormacionDocente.forEach(
-    (e) => (content += `- Curso: ${e.desc || "N/A"}\n`),
-  );
-  content += `B.6 Actividades de Divulgación Docente Universitaria:\n`;
-  state.B.B6_ActividadesDivulgacionDocente.forEach(
-    (e) => (content += `- Actividad: ${e.desc || "N/A"}\n`),
-  );
-  content += `B.7 Estancias Docentes:\n- Meses: ${state.B.B7_EstanciasDocentes.meses}\n- Descripción: ${state.B.B7_EstanciasDocentes.desc || "N/A"}\n`;
-
-  // Section C
-  content += `\n--- SECCIÓN C: ${sectionTitles.C} ---\n\n`;
-  content += `C.1 Experiencia Científica (proyectos, contratos, etc.):\n`;
-  state.C.C1_ExperienciaCientifica.forEach(
-    (e) => (content += `- Experiencia: ${e.desc || "N/A"}\n`),
-  );
-  content += `C.2 Producción Científica (publicaciones, congresos, etc.):\n`;
-  state.C.C2_ProduccionCientifica.forEach(
-    (e) =>
-      (content += `- Aportación: ${e.resumen || "N/A"}\n  Impacto: ${e.impacto || "N/A"}\n`),
-  );
-  content += `C.3 Transferencia Científica:\n`;
-  state.C.C3_TransferenciaCientifica.forEach(
-    (e) =>
-      (content += `- Transferencia: ${e.resumen || "N/A"}\n  Impacto: ${e.impacto || "N/A"}\n`),
-  );
-  content += `C.4 Divulgación Científica:\n`;
-  state.C.C4_DivulgacionCientifica.forEach(
-    (e) =>
-      (content += `- Divulgación: ${e.resumen || "N/A"}\n  Impacto: ${e.impacto || "N/A"}\n`),
-  );
-  content += `C.5 Estancias de Investigación:\n- Meses: ${state.C.C5_EstanciasInvestigacion.meses}\n- Descripción: ${state.C.C5_EstanciasInvestigacion.desc || "N/A"}\n`;
-
-  // Section D
-  content += `\n--- SECCIÓN D: ${sectionTitles.D} ---\n\n`;
-  content += `D.1 Gestión Académica:\n`;
-  state.D.D1_GestionAcademica.forEach(
-    (e) => (content += `- Gestión: ${e.desc || "N/A"}\n`),
-  );
-  content += `D.2 Gestión de la Docencia e Investigación:\n`;
-  state.D.D2_GestionDocenciaInvestigacion.forEach(
-    (e) => (content += `- Gestión: ${e.desc || "N/A"}\n`),
-  );
-  content += `D.3 Gestión No Universitaria:\n`;
-  state.D.D3_GestionNoUniversitaria.forEach(
-    (e) => (content += `- Gestión: ${e.desc || "N/A"}\n`),
-  );
-
-  content += `\n--- FIN DEL INFORME ---\n`;
-  return content;
-};
-
 const App: React.FC = () => {
   const [contestType, setContestType] = useState<ContestType | null>(null);
   const [currentSection, setCurrentSection] = useState(0);
@@ -157,7 +49,7 @@ const App: React.FC = () => {
   const playClickSound = useSound("/click.mp3");
   const playSuccessSound = useSound("/success.mp3"); // Assuming a success sound
 
-  const { state, updateField, addEntry, removeEntry, scores } =
+  const { state, files, updateField, addEntry, removeEntry, updateFile, scores } =
     useMeritStore(contestType);
 
   useEffect(() => {
@@ -201,16 +93,7 @@ const App: React.FC = () => {
 
   const handleExport = () => {
     playClickSound();
-    const content = generateTxtContent(state);
-    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "meritos_PAD_UPO.txt";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+    exportToZip(state, files, scores);
   };
 
   const renderSection = () => {
@@ -219,36 +102,44 @@ const App: React.FC = () => {
         return (
           <SectionA
             data={state.A}
+            files={files}
             updateField={updateField}
             addEntry={addEntry}
             removeEntry={removeEntry}
+            updateFile={updateFile}
           />
         );
       case "B":
         return (
           <SectionB
             data={state.B}
+            files={files}
             updateField={updateField}
             addEntry={addEntry}
             removeEntry={removeEntry}
+            updateFile={updateFile}
           />
         );
       case "C":
         return (
           <SectionC
             data={state.C}
+            files={files}
             updateField={updateField}
             addEntry={addEntry}
             removeEntry={removeEntry}
+            updateFile={updateFile}
           />
         );
       case "D":
         return (
           <SectionD
             data={state.D}
+            files={files}
             updateField={updateField}
             addEntry={addEntry}
             removeEntry={removeEntry}
+            updateFile={updateFile}
           />
         );
       case "Fase 2":
@@ -338,10 +229,10 @@ const App: React.FC = () => {
             <button
               onClick={handleExport}
               className="flex items-center gap-1.5 text-sm text-[var(--text-color)] hover:text-[var(--primary-color)] hover:underline"
-              title="Exportar a TXT"
+              title="Exportar a ZIP"
             >
               <DownloadIcon className="h-4 w-4" />
-              Exportar
+              Exportar a ZIP
             </button>
             <button
               onClick={resetApp}

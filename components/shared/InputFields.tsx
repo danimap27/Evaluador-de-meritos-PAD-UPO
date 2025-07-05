@@ -58,18 +58,20 @@ export const TextareaInput: React.FC<
 
 interface FileInputProps {
   label: string;
-  fileName?: string;
-  onFileChange: (fileName: string) => void;
+  file?: File;
+  onFileChange: (file: File) => void;
+  htmlId: string; // New prop for unique HTML ID
 }
 
 export const FileUpload: React.FC<FileInputProps> = ({
   label,
-  fileName,
+  file,
   onFileChange,
+  htmlId,
 }) => {
   const handleFile = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      onFileChange(e.target.files[0].name);
+      onFileChange(e.target.files[0]);
     }
   };
 
@@ -83,13 +85,13 @@ export const FileUpload: React.FC<FileInputProps> = ({
           <UploadIcon className="mx-auto h-10 w-10 text-[var(--text-color)] text-opacity-60" />
           <div className="flex text-sm text-[var(--text-color)]">
             <label
-              htmlFor={`file-upload-${label}`}
+              htmlFor={`file-upload-${htmlId}`}
               className="relative cursor-pointer bg-[var(--background-color)] rounded-md font-medium text-[var(--primary-color)] hover:brightness-90 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-[var(--primary-color)]"
             >
               <span>Subir un archivo</span>
               <input
-                id={`file-upload-${label}`}
-                name={`file-upload-${label}`}
+                id={`file-upload-${htmlId}`}
+                name={`file-upload-${htmlId}`}
                 type="file"
                 className="sr-only"
                 onChange={handleFile}
@@ -100,15 +102,11 @@ export const FileUpload: React.FC<FileInputProps> = ({
           <p className="text-xs text-[var(--text-color)] text-opacity-70">PDF, DOCX, JPG, PNG</p>
         </div>
       </div>
-      {fileName && (
+      {file && (
         <p className="text-sm text-[var(--primary-color)] mt-2">
-          Archivo seleccionado: {fileName}
+          Archivo seleccionado: {file.name}
         </p>
       )}
-      <p className="text-xs text-[var(--text-color)] text-opacity-70 mt-2">
-        <strong>Nota:</strong> Esta función es solo para tu control. Los
-        archivos no se guardan en el servidor; solo se registra el nombre.
-      </p>
     </div>
   );
 };

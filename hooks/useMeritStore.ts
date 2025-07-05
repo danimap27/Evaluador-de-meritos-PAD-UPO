@@ -3,6 +3,11 @@ import { AppState, CalculatedScores } from "../types";
 import { ContestType } from "../App";
 import { v4 as uuidv4 } from "uuid";
 
+// Define a type for the file store
+type FileStore = {
+  [id: string]: File;
+};
+
 const initialAppState: AppState = {
   contestType: null,
   preferredMerits: {
@@ -55,6 +60,7 @@ const MAX_SCORES = {
 };
 
 const calculateScores = (state: AppState): CalculatedScores => {
+  // ... (calculation logic remains the same)
   const scoreA = Math.min(
     (state.A.A1_1_Titulaciones.length / 2) * 2 +
       state.A.A1_2_CalificacionMedia.value * 2 +
@@ -165,13 +171,18 @@ export const useMeritStore = (contestType: ContestType | null) => {
     return { ...initialAppState, contestType };
   });
 
+  // State to hold the uploaded files, not persisted to localStorage
+  const [files, setFiles] = useState<FileStore>({});
+
   useEffect(() => {
     setState((s) => ({ ...s, contestType }));
   }, [contestType]);
 
   useEffect(() => {
     try {
-      localStorage.setItem("meritState", JSON.stringify(state));
+      // Create a copy of the state to remove file objects before saving
+      const stateToSave = JSON.parse(JSON.stringify(state));
+      localStorage.setItem("meritState", JSON.stringify(stateToSave));
     } catch (error) {
       console.error("Could not save state to localStorage", error);
     }
@@ -230,6 +241,7 @@ export const useMeritStore = (contestType: ContestType | null) => {
 
   const addEntry = useCallback(
     (section: keyof AppState, field: string, newEntryData: object = {}) => {
+      const newId = uuidv4();
       setState((prevState) => {
         const newState = { ...prevState };
         const sectionData = newState[section];
@@ -238,12 +250,13 @@ export const useMeritStore = (contestType: ContestType | null) => {
         }
         const sectionState = { ...sectionData } as any;
         if (Array.isArray(sectionState[field])) {
-          const newEntry = { id: uuidv4(), ...newEntryData };
+          const newEntry = { id: newId, ...newEntryData };
           sectionState[field] = [...sectionState[field], newEntry];
           newState[section] = sectionState;
         }
         return newState;
       });
+      return newId;
     },
     [],
   );
@@ -265,11 +278,25 @@ export const useMeritStore = (contestType: ContestType | null) => {
         }
         return newState;
       });
+
+      // Also remove the associated file
+      setFiles((prevFiles) => {
+        const newFiles = { ...prevFiles };
+        delete newFiles[id];
+        return newFiles;
+      });
     },
     [],
   );
 
+  const updateFile = useCallback((id: string, file: File) => {
+    setFiles((prevFiles) => ({
+      ...prevFiles,
+      [id]: file,
+    }));
+  }, []);
+
   const scores = calculateScores(state);
 
-  return { state, updateField, addEntry, removeEntry, scores };
+  return { state, files, updateField, addEntry, removeEntry, updateFile, scores };
 };

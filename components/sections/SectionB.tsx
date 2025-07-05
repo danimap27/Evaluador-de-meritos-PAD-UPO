@@ -2,25 +2,29 @@ import React from "react";
 import { SectionBState } from "../../types";
 import { SectionWrapper } from "../shared/SectionWrapper";
 import { EntryCard } from "../shared/EntryCard";
-import { NumberInput, TextareaInput } from "../shared/InputFields";
+import { NumberInput, TextareaInput, FileUpload } from "../shared/InputFields";
 
 interface Props {
   data: SectionBState;
+  files: { [id: string]: File };
   updateField: (
     section: "B",
     field: keyof SectionBState,
     value: any,
     id?: string,
   ) => void;
-  addEntry: (section: "B", field: keyof SectionBState, data?: object) => void;
+  addEntry: (section: "B", field: keyof SectionBState, data?: object) => string;
   removeEntry: (section: "B", field: keyof SectionBState, id: string) => void;
+  updateFile: (id: string, file: File) => void;
 }
 
 export const SectionB: React.FC<Props> = ({
   data,
+  files,
   updateField,
   addEntry,
   removeEntry,
+  updateFile,
 }) => {
   const isSaturatedUni = data.B1_1_ActividadDocenteUni.horas >= 240;
   const isSaturatedNoUni = data.B1_2_ActividadDocenteNoUni.horas >= 240;
@@ -49,6 +53,12 @@ export const SectionB: React.FC<Props> = ({
             {isSaturatedUni ? "(Máx)" : ""}
           </div>
         </div>
+        <FileUpload
+          label="Justificante"
+          file={files[`B1_1_ActividadDocenteUni`]}
+          onFileChange={(file) => updateFile(`B1_1_ActividadDocenteUni`, file)}
+          htmlId={`B1_1_ActividadDocenteUni`}
+        />
       </SectionWrapper>
 
       <SectionWrapper
@@ -73,6 +83,12 @@ export const SectionB: React.FC<Props> = ({
             {isSaturatedNoUni ? "(Máx)" : ""}
           </div>
         </div>
+        <FileUpload
+          label="Justificante"
+          file={files[`B1_2_ActividadDocenteNoUni`]}
+          onFileChange={(file) => updateFile(`B1_2_ActividadDocenteNoUni`, file)}
+          htmlId={`B1_2_ActividadDocenteNoUni`}
+        />
       </SectionWrapper>
 
       <SectionWrapper
@@ -87,6 +103,12 @@ export const SectionB: React.FC<Props> = ({
           }
           maxLength={2500}
           rows={4}
+        />
+        <FileUpload
+          label="Justificante"
+          file={files[`B2_CalidadDocente`]}
+          onFileChange={(file) => updateFile(`B2_CalidadDocente`, file)}
+          htmlId={`B2_CalidadDocente`}
         />
       </SectionWrapper>
 
@@ -116,6 +138,12 @@ export const SectionB: React.FC<Props> = ({
               }
               maxLength={500}
               rows={2}
+            />
+            <FileUpload
+              label="Justificante"
+              file={files[entry.id]}
+              onFileChange={(file) => updateFile(entry.id, file)}
+              htmlId={`B3_TutelaAlumnado-${entry.id}`}
             />
           </EntryCard>
         ))}
@@ -147,6 +175,12 @@ export const SectionB: React.FC<Props> = ({
               }
               maxLength={500}
               rows={2}
+            />
+            <FileUpload
+              label="Justificante"
+              file={files[entry.id]}
+              onFileChange={(file) => updateFile(entry.id, file)}
+              htmlId={`B4_InnovacionDocente-${entry.id}`}
             />
           </EntryCard>
         ))}
@@ -181,6 +215,12 @@ export const SectionB: React.FC<Props> = ({
               maxLength={500}
               rows={2}
             />
+            <FileUpload
+              label="Justificante"
+              file={files[entry.id]}
+              onFileChange={(file) => updateFile(entry.id, file)}
+              htmlId={`B5_CursosFormacionDocente-${entry.id}`}
+            />
           </EntryCard>
         ))}
       </SectionWrapper>
@@ -214,6 +254,12 @@ export const SectionB: React.FC<Props> = ({
               maxLength={500}
               rows={2}
             />
+            <FileUpload
+              label="Justificante"
+              file={files[entry.id]}
+              onFileChange={(file) => updateFile(entry.id, file)}
+              htmlId={`B6_ActividadesDivulgacionDocente-${entry.id}`}
+            />
           </EntryCard>
         ))}
       </SectionWrapper>
@@ -241,7 +287,14 @@ export const SectionB: React.FC<Props> = ({
           maxLength={2500}
           rows={4}
         />
+        <FileUpload
+          label="Justificante"
+          file={files[`B7_EstanciasDocentes`]}
+          onFileChange={(file) => updateFile(`B7_EstanciasDocentes`, file)}
+          htmlId={`B7_EstanciasDocentes`}
+        />
       </SectionWrapper>
     </div>
   );
 };
+

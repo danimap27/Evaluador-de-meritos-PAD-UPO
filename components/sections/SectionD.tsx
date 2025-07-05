@@ -2,25 +2,29 @@ import React from "react";
 import { SectionDState } from "../../types";
 import { SectionWrapper } from "../shared/SectionWrapper";
 import { EntryCard } from "../shared/EntryCard";
-import { TextareaInput } from "../shared/InputFields";
+import { TextareaInput, FileUpload } from "../shared/InputFields";
 
 interface Props {
   data: SectionDState;
+  files: { [id: string]: File };
   updateField: (
     section: "D",
     field: keyof SectionDState,
     value: any,
     id?: string,
   ) => void;
-  addEntry: (section: "D", field: keyof SectionDState, data?: object) => void;
+  addEntry: (section: "D", field: keyof SectionDState, data?: object) => string;
   removeEntry: (section: "D", field: keyof SectionDState, id: string) => void;
+  updateFile: (id: string, file: File) => void;
 }
 
 export const SectionD: React.FC<Props> = ({
   data,
+  files,
   updateField,
   addEntry,
   removeEntry,
+  updateFile,
 }) => (
   <div className="space-y-8">
     <SectionWrapper
@@ -49,6 +53,12 @@ export const SectionD: React.FC<Props> = ({
             }
             maxLength={500}
             rows={2}
+          />
+          <FileUpload
+            label="Justificante"
+            file={files[entry.id]}
+            onFileChange={(file) => updateFile(entry.id, file)}
+            htmlId={`D1_GestionAcademica-${entry.id}`}
           />
         </EntryCard>
       ))}
@@ -83,6 +93,12 @@ export const SectionD: React.FC<Props> = ({
             maxLength={500}
             rows={2}
           />
+          <FileUpload
+            label="Justificante"
+            file={files[entry.id]}
+            onFileChange={(file) => updateFile(entry.id, file)}
+            htmlId={`D2_GestionDocenciaInvestigacion-${entry.id}`}
+          />
         </EntryCard>
       ))}
     </SectionWrapper>
@@ -116,8 +132,15 @@ export const SectionD: React.FC<Props> = ({
             maxLength={500}
             rows={2}
           />
+          <FileUpload
+            label="Justificante"
+            file={files[entry.id]}
+            onFileChange={(file) => updateFile(entry.id, file)}
+            htmlId={`D3_GestionNoUniversitaria-${entry.id}`}
+          />
         </EntryCard>
       ))}
     </SectionWrapper>
   </div>
 );
+

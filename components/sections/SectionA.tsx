@@ -11,21 +11,25 @@ import {
 
 interface Props {
   data: SectionAState;
+  files: { [id: string]: File };
   updateField: (
     section: "A",
     field: keyof SectionAState,
     value: any,
     id?: string,
   ) => void;
-  addEntry: (section: "A", field: keyof SectionAState, data?: object) => void;
+  addEntry: (section: "A", field: keyof SectionAState, data?: object) => string;
   removeEntry: (section: "A", field: keyof SectionAState, id: string) => void;
+  updateFile: (id: string, file: File) => void;
 }
 
 export const SectionA: React.FC<Props> = ({
   data,
+  files,
   updateField,
   addEntry,
   removeEntry,
+  updateFile,
 }) => (
   <div className="space-y-8">
     <SectionWrapper
@@ -54,15 +58,9 @@ export const SectionA: React.FC<Props> = ({
           />
           <FileUpload
             label="Justificante"
-            fileName={entry.archivo}
-            onFileChange={(fileName) =>
-              updateField(
-                "A",
-                "A1_1_Titulaciones",
-                { archivo: `historial_academico/titulaciones/${fileName}` },
-                entry.id,
-              )
-            }
+            file={files[entry.id]}
+            onFileChange={(file) => updateFile(entry.id, file)}
+            htmlId={`A1_1_Titulaciones-${entry.id}`}
           />
         </EntryCard>
       ))}
@@ -82,6 +80,12 @@ export const SectionA: React.FC<Props> = ({
         }
         min={0}
         max={4}
+      />
+      <FileUpload
+        label="Justificante"
+        file={files[`A1_2_CalificacionMedia`]}
+        onFileChange={(file) => updateFile(`A1_2_CalificacionMedia`, file)}
+        htmlId={`A1_2_CalificacionMedia`}
       />
     </SectionWrapper>
 
@@ -109,6 +113,12 @@ export const SectionA: React.FC<Props> = ({
                 entry.id,
               )
             }
+          />
+          <FileUpload
+            label="Justificante"
+            file={files[entry.id]}
+            onFileChange={(file) => updateFile(entry.id, file)}
+            htmlId={`A1_3_BecasContratos-${entry.id}`}
           />
         </EntryCard>
       ))}
@@ -138,6 +148,12 @@ export const SectionA: React.FC<Props> = ({
             }
             maxLength={500}
             rows={2}
+          />
+          <FileUpload
+            label="Justificante"
+            file={files[entry.id]}
+            onFileChange={(file) => updateFile(entry.id, file)}
+            htmlId={`A1_4_PremiosRelevantes-${entry.id}`}
           />
         </EntryCard>
       ))}
@@ -175,6 +191,12 @@ export const SectionA: React.FC<Props> = ({
               )
             }
           />
+          <FileUpload
+            label="Justificante"
+            file={files[entry.id]}
+            onFileChange={(file) => updateFile(entry.id, file)}
+            htmlId={`A2_1_OtrasTitulaciones-${entry.id}`}
+          />
         </EntryCard>
       ))}
       <button
@@ -204,6 +226,12 @@ export const SectionA: React.FC<Props> = ({
                 entry.id,
               )
             }
+          />
+          <FileUpload
+            label="Justificante"
+            file={files[entry.id]}
+            onFileChange={(file) => updateFile(entry.id, file)}
+            htmlId={`A2_2_CursosFormacion-${entry.id}`}
           />
         </EntryCard>
       ))}
@@ -236,6 +264,12 @@ export const SectionA: React.FC<Props> = ({
                 entry.id,
               )
             }
+          />
+          <FileUpload
+            label="Justificante"
+            file={files[entry.id]}
+            onFileChange={(file) => updateFile(entry.id, file)}
+            htmlId={`A2_3_ActividadProfesional-${entry.id}`}
           />
         </EntryCard>
       ))}
